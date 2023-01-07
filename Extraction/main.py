@@ -1,10 +1,17 @@
+import requests
+import pandas as pd
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import csv
+
+'''send request'''
 
 driver = webdriver.Chrome()
 driver.get('https://id.carousell.com/categories/photography-6')
 driver.maximize_window()
+
+
+'''scrolling down'''
 
 bottom = False
 a = 0
@@ -15,25 +22,47 @@ while not bottom:
         bottom = True
     a += 10
 
-data = driver.find_elements(By.CSS_SELECTOR, 'main > div > div > div > div > div.D_uO')
 
-file = open('hasilextraction.csv', 'w', newline='')
-write = csv.writer(file)
-headers = ['Produk', 'Nama Toko', 'Harga', 'Kondisi']
+'''find all same element each variable'''
+
+judul = driver.find_elements(By.XPATH, '//*[@id="main"]/div[2]/div/div[5]/main/div/div/div/div/div[1]/a[2]/p[1]')
+image = driver.find_elements(By.XPATH,
+                             '//*[@id="main"]/div[2]/div/div[5]/main/div/div/div/div/div[1]/a[2]/div[1]/div/div/img')
+harga = driver.find_elements(By.XPATH, '//*[@id="main"]/div[2]/div/div[5]/main/div/div/div/div/div[1]/a[2]/div[2]/p')
+
+
+'''fetch each element attribute into one dict/json'''
 
 photography = []
-for i in data:
-    judul = i.find_element(By.CSS_SELECTOR, 'a:nth-child(2) > p.D_sV.D_so.D_sW.D_sZ.D_tc.D_tg.D_ti.D_te.D_tu').text
-    image = i.find_element(By.CSS_SELECTOR, 'a:nth-child(2) > div.D_uW > div > div > img').get_dom_attribute('src')
-    toko = i.find_element(By.CSS_SELECTOR, 'a.D_uS.D_uo > div.D_uV > p').text
-    harga = i.find_element(By.CSS_SELECTOR, 'a:nth-child(2) > div.D_vh > p').text
-    kondisi = i.find_element(By.CSS_SELECTOR, 'a:nth-child(2) > p:nth-child(4)').text
+j = 1
+for a, b, c in zip(judul, image, harga):
+    title = a.text
+    img = b.get_dom_attribute('src')
+    price = c.text
+    dicts = {
+        'Nama Produk': title,
+        'Gambar Produk': img,
+        'Harga Produk': price
+    }
+    photography.append(dicts)
 
-    file = open('hasilextraction.csv', 'a', newline='', encoding='utf-8')
-    write = csv.writer(file)
-    write.writerow([judul, toko, harga, kondisi])
-    file.close()
-print('csv created!')
+    print(f"get product detail....{j}")
+    j += 1
 
 
-driver.quit()
+'''writing result to files'''
+
+# Convert the JSON data to a DataFrame
+df = pd.DataFrame(photography)
+
+# Write the DataFrame to a JSON file
+df.to_json("result.json", orient="records")
+print(f"JSON file created....!")
+
+# Write the DataFrame to a CSV file
+df.to_csv("result.csv", index=False)
+print(f"CSV file created....!")
+
+# Write the DataFrame to a excel file
+df.to_excel("result.xlsx", index=False)
+print(f"excel file created....!")
