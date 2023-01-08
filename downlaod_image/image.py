@@ -8,8 +8,6 @@ driver = webdriver.Chrome()
 driver.get('https://id.carousell.com/categories/photography-6')
 driver.maximize_window()
 
-wait = WebDriverWait(driver, 3)
-
 j = 1
 while True:
     # Scroll down
