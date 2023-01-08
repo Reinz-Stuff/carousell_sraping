@@ -23,7 +23,7 @@ while True:
     j += 1
 
     try:
-        # Wait for the elements to disappear
+        # Wait all elements to appear
         images = driver.find_elements(By.XPATH,  '//img[@class="D_vo D_vl D_Xz"]')
         if len(images) == 48:
             print(f"{len(images)} image found...!")
@@ -41,5 +41,5 @@ while True:
             pass
 
     except:
-        print("no image found")
+        print("cannot find all image")
         break
