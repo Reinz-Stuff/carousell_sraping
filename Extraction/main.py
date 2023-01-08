@@ -1,17 +1,15 @@
-import requests
 import pandas as pd
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-'''send request'''
+# send request
 
 driver = webdriver.Chrome()
 driver.get('https://id.carousell.com/categories/photography-6')
 driver.maximize_window()
 
 
-'''scrolling down'''
+# scrolling down
 
 bottom = False
 a = 0
@@ -23,7 +21,7 @@ while not bottom:
     a += 10
 
 
-'''find all same element each variable'''
+# find all same element each variable
 
 judul = driver.find_elements(By.XPATH, '//*[@id="main"]/div[2]/div/div[5]/main/div/div/div/div/div[1]/a[2]/p[1]')
 image = driver.find_elements(By.XPATH,
@@ -31,7 +29,7 @@ image = driver.find_elements(By.XPATH,
 harga = driver.find_elements(By.XPATH, '//*[@id="main"]/div[2]/div/div[5]/main/div/div/div/div/div[1]/a[2]/div[2]/p')
 
 
-'''fetch each element attribute into one dict/json'''
+# fetch each element attribute into one dict/json
 
 photography = []
 j = 1
@@ -50,9 +48,7 @@ for a, b, c in zip(judul, image, harga):
     j += 1
 
 
-'''writing result to files'''
-
-# Convert the JSON data to a DataFrame
+# writing result to files
 df = pd.DataFrame(photography)
 
 # Write the DataFrame to a JSON file
