@@ -67,7 +67,7 @@ def data_extraction():
                 df.to_csv("result.csv", index=False)
                 print(f"CSV file created....!")
 
-                # Write the DataFrame to a excel file
+                # Write the DataFrame to excell file
                 df.to_excel("result.xlsx", index=False)
                 print(f"excel file created....!")
 
