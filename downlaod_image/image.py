@@ -1,3 +1,5 @@
+import os
+
 import requests as requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -29,6 +31,14 @@ def image_extraction():
             images = driver.find_elements(By.XPATH, '//img[@class="D_vo D_vl D_Xz"]')
             if len(images) == 48:
                 print(f"{len(images)} image found...!")
+
+                # Create a directory
+                print('creating directory...')
+                try:
+                    os.makedirs('images')
+                except FileExistsError:
+                    print(f'folder already exists.')
+
                 j = 1
                 for image in images:
                     img = image.get_dom_attribute('src')
@@ -42,9 +52,10 @@ def image_extraction():
                 print(f"{48 - len(images)} image not loaded...rescrolling")
                 pass
 
-        except:
+        except TypeError:
             print("cannot find all image")
             break
+
 
 if __name__ == '__main__':
     image_extraction()
